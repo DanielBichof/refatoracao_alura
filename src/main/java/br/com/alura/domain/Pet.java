@@ -1,52 +1,53 @@
 package br.com.alura.domain;
 
 public class Pet {
-	private long id;
-	private String tipo;
-	private String nome;
-	private String raca;
-	private String cor;
-	private int idade;
-	private float peso;
 
-	public Pet() {
-	}
+    public Pet() {
 
-	public Pet(String tipo, String nome, String raca, int idade, String cor, float peso) {
-		this.tipo = tipo;
-		this.nome = nome;
-		this.raca = raca;
-		this.idade = idade;
-		this.cor = cor;
-		this.peso = peso;
-	}
+    }
 
-	public long getId() {
-		return id;
-	}
+    public Pet(String tipo, String nome, String raca, int idade, String cor, Float peso) {
+        this.tipo = tipo;
+        this.nome = nome;
+        this.raca = raca;
+        this.idade = idade;
+        this.cor = cor;
+        this.peso = peso;
+    }
 
-	public String getTipo() {
-		return tipo;
-	}
+    private Long id;
+    private String tipo;
+    private String nome;
+    private String raca;
+    private int idade;
+    private String cor;
+    private Float peso;
 
-	public String getNome() {
-		return nome;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public String getRaca() {
-		return raca;
-	}
+    public String getNome() {
+        return nome;
+    }
 
-	public int getIdade() {
-		return idade;
-	}
+    public String getRaca() {
+        return raca;
+    }
 
-	public float getPeso() {
-		return peso;
-	}
+    public String getTipo() {
+        return tipo;
+    }
 
-	public String getCor() {
-		return cor;
-	}
+    public int getIdade() {
+        return idade;
+    }
 
+    public Float getPeso() {
+        return peso;
+    }
+
+    public String getCor() {
+        return cor;
+    }
 }

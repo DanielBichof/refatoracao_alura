@@ -1,15 +1,16 @@
 package br.com.alura;
 
+import br.com.alura.client.ClientHttpConfiguration;
+import br.com.alura.service.AbrigoService;
+import br.com.alura.service.PetService;
 import java.util.Scanner;
-
-import br.com.alura.servicos.AbrigoService;
-import br.com.alura.servicos.PetService;
 
 public class AdopetConsoleApplication {
 
     public static void main(String[] args) {
-        PetService petServices = new PetService();
-        AbrigoService abrigoServices = new AbrigoService();
+        ClientHttpConfiguration client = new ClientHttpConfiguration();
+        AbrigoService abrigoService = new AbrigoService(client);
+        PetService petService = new PetService(client);
         System.out.println("##### BOAS VINDAS AO SISTEMA ADOPET CONSOLE #####");
         try {
             int opcaoEscolhida = 0;
@@ -25,21 +26,13 @@ public class AdopetConsoleApplication {
                 opcaoEscolhida = Integer.parseInt(textoDigitado);
 
                 if (opcaoEscolhida == 1) {
-                    abrigoServices.listarAbrigos();
+                    abrigoService.listarAbrigo();
                 } else if (opcaoEscolhida == 2) {
-                    abrigoServices.cadastraAbrigo();
+                    abrigoService.cadastrarAbrigo();
                 } else if (opcaoEscolhida == 3) {
-                    System.out.println("Digite o id ou nome do abrigo:");
-                    String idOuNome = new Scanner(System.in).nextLine();
-                    petServices.listaPets(idOuNome);
+                    petService.listarPetsDoAbrigo();
                 } else if (opcaoEscolhida == 4) {
-                    System.out.println("Digite o id ou nome do abrigo:");
-                    String idOuNome = new Scanner(System.in).nextLine();
-                    System.out.println("Digite o nome do arquivo CSV:");
-                    String nomeArquivo = new Scanner(System.in).nextLine();
-
-                    petServices.importarPetsCSV(idOuNome, nomeArquivo);
-
+                    petService.importarPetsDoAbrigo();
                 } else if (opcaoEscolhida == 5) {
                     break;
                 } else {
@@ -52,5 +45,4 @@ public class AdopetConsoleApplication {
             e.printStackTrace();
         }
     }
-
 }
