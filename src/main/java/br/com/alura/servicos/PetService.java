@@ -5,35 +5,35 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.http.HttpClient;
 import java.net.http.HttpResponse;
+import java.util.Arrays;
+import java.util.List;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.alura.servicos.AbrigoService;
+import br.com.alura.client.ClientUtils;
+import br.com.alura.domain.Pet;
 
 public class PetService {
+  HttpClient client = HttpClient.newHttpClient();
   public void listaPets(String idOuNome) throws IOException, InterruptedException {
-    AbrigoService abrigo = new AbrigoService();
-    HttpClient client = HttpClient.newHttpClient();
-    String uri = "http://localhost:8080/abrigos/" + idOuNome + "/pets";
-    HttpResponse<String> response = abrigo.disparaGetHTTP(client, uri);
+    ClientUtils clientServices = new ClientUtils(client, "http://localhost:8080");
+    String uri = "/abrigos/" + idOuNome + "/pets";
+    HttpResponse<String> response = clientServices.disparaGetHTTP(uri);
     int statusCode = response.statusCode();
     if (statusCode == 404 || statusCode == 500) {
       System.out.println("ID ou nome não cadastrado!");
       return;
     }
     String responseBody = response.body();
-    JsonArray jsonArray = JsonParser.parseString(responseBody).getAsJsonArray();
+    Pet[] pets = new ObjectMapper().readValue(responseBody, Pet[].class);
+    List<Pet> petList = Arrays.stream(pets).toList();
     System.out.println("Pets cadastrados:");
-    for (JsonElement element : jsonArray) {
-      JsonObject jsonObject = element.getAsJsonObject();
-      long id = jsonObject.get("id").getAsLong();
-      String tipo = jsonObject.get("tipo").getAsString();
-      String nome = jsonObject.get("nome").getAsString();
-      String raca = jsonObject.get("raca").getAsString();
-      int idade = jsonObject.get("idade").getAsInt();
+    for (Pet pet : petList) {
+      long id = pet.getId();
+      String tipo = pet.getTipo();
+      String nome = pet.getNome();
+      String raca = pet.getRaca();
+      String idade = pet.getNome();
       System.out.println(id + " - " + tipo + " - " + nome + " - " + raca + " - " + idade + " ano(s)");
     }
   }
@@ -58,18 +58,11 @@ public class PetService {
       String cor = campos[4];
       Float peso = Float.parseFloat(campos[5]);
 
-      JsonObject json = new JsonObject();
-      json.addProperty("tipo", tipo.toUpperCase());
-      json.addProperty("nome", nome);
-      json.addProperty("raca", raca);
-      json.addProperty("idade", idade);
-      json.addProperty("cor", cor);
-      json.addProperty("peso", peso);
+      Pet pet = new Pet(tipo.toUpperCase(), nome, raca, idade, cor, peso);
 
-      HttpClient client = HttpClient.newHttpClient();
-      String uri = "http://localhost:8080/abrigos/" + idOuNome + "/pets";
-      AbrigoService abrigo = new AbrigoService();
-      HttpResponse<String> response = abrigo.dispararPostHTTP(client, uri, json);
+      ClientUtils clientServices = new ClientUtils(client, "http://localhost:8080");
+      String uri = "/abrigos/" + idOuNome + "/pets";
+      HttpResponse<String> response = clientServices.dispararPostHTTP(uri, pet);
       int statusCode = response.statusCode();
       String responseBody = response.body();
       if (statusCode == 200) {
